@@ -75,7 +75,12 @@
     <None Include="lib\sfmlnet-graphics-2.dll" />
     <None Include="lib\sfmlnet-window-2.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="External\MoogGeneral\MoogGeneral\MoogGeneral.csproj">
+      <Project>{6b061387-8d6a-4c6b-9c4a-a76d16ba8da7}</Project>
+      <Name>MoogGeneral</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="content\white.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
