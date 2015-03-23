@@ -5,7 +5,7 @@ using Indigo.Graphics;
 
 namespace aStar
 {
-	class Game : Engine
+	public class Game : Engine
 	{
 		public static float Lol = 10;
 
@@ -22,7 +22,7 @@ namespace aStar
 			FP.Screen.ClearColor = new Color(0x000000);
 			Mouse.CursorVisible = true;
 
-			FP.World = new TiledWorld();
+			FP.World = new TiledWorld(this);
 		}
 
 		public override void FocusLost()
