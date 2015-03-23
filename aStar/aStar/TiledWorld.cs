@@ -11,10 +11,12 @@ namespace aStar
 	public class TiledWorld : World
 	{
 		private TileMap tiles = new TileMap();
+		public Game game;
 
-		public TiledWorld()
+		public TiledWorld(Game game)
 		{
 			this.Add(tiles);
+			this.game = game;
 		}
 
 		public override void Update()
@@ -28,6 +30,8 @@ namespace aStar
 				Camera.X -= 100 * FP.Elapsed;
 			if (Keyboard.Right.Down)
 				Camera.X += 100 * FP.Elapsed;
+			if (Keyboard.Escape.Pressed)
+				game.Quit();
 		}
 	}
 }

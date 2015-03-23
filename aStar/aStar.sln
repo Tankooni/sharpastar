@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aStar", "aStar\aStar.csproj", "{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indigo", "..\..\indigo\Indigo.csproj", "{A553D862-7695-4471-97F5-4AF38E0907ED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,16 +23,6 @@ Global
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|x86.ActiveCfg = Release|Any CPU
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Debug|x86.ActiveCfg = Debug|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Debug|x86.Build.0 = Debug|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Release|Any CPU.ActiveCfg = Release|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Release|Mixed Platforms.Build.0 = Release|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Release|x86.ActiveCfg = Release|x86
-		{A553D862-7695-4471-97F5-4AF38E0907ED}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
