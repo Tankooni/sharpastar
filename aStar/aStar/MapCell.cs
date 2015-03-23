@@ -12,14 +12,15 @@ namespace aStar
 	{
 		public TileType TileType { get; private set; }
 		public int CellSize { get; private set; }
-
-		public MapCell(TileType tileType, int cellSize)
+		public Tuple<int, int> Index { get; private set; }
+		public MapCell(TileType tileType, int cellSize, Tuple<int, int> index)
 			: base(Library.GetTexture("content/white.png")/*Image.CreateRect(cellSize, cellSize, new Color(0x000000))*/)
 		{
 			TileType = tileType;
 			CellSize = cellSize;
 			Color = SelectTileColor(tileType);
-			this.Scale = CellSize / (float)this.Height;
+			Scale = CellSize / (float)this.Height;
+			Index = index;
 		}
 
 		public TileType ChangeTileType(TileType tileType)
@@ -34,15 +35,15 @@ namespace aStar
 			{
 				default: //wat?
 					return new Color(0xff00ff);
-				case TileType.End: //end
+				case TileType.End:
 					return new Color(0xff0000);
-				case TileType.Start: //start
+				case TileType.Start:
 					return new Color(0x00ff00);
-				case TileType.Regular: //reg
+				case TileType.Regular:
 					return new Color(0x00ffff);
-				case TileType.Wall: //wall
+				case TileType.Wall:
 					return new Color(0x0a0069);
-				case TileType.Path: //path
+				case TileType.Path:
 					return new Color(0xe69609);
 			}
 		}
