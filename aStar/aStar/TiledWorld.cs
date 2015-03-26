@@ -30,8 +30,12 @@ namespace aStar
 				Camera.X -= 100 * FP.Elapsed;
 			if (Keyboard.Right.Down)
 				Camera.X += 100 * FP.Elapsed;
-			if (Keyboard.Escape.Pressed)
-				game.Quit();
+			if (Keyboard.R.Pressed)
+			{
+				this.Remove(tiles);
+				PathNode.ConnectedNodes.Clear();
+				this.Add(tiles = new TileMap());
+			}
 		}
 	}
 }

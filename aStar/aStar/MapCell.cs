@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Indigo;
 using Indigo.Graphics;
+using Priority_Queue;
 
 namespace aStar
 {
@@ -13,7 +14,13 @@ namespace aStar
 		public TileType TileType { get; private set; }
 		public int CellSize { get; private set; }
 		public Tuple<int, int> Index { get; private set; }
+		public PathNode MyNode { get; private set; }
+		
 		public MapCell(TileType tileType, int cellSize, Tuple<int, int> index)
+			: this(tileType, cellSize, index, null)
+		{
+		}
+		public MapCell(TileType tileType, int cellSize, Tuple<int, int> index, PathNode pathNode)
 			: base(Library.GetTexture("content/white.png")/*Image.CreateRect(cellSize, cellSize, new Color(0x000000))*/)
 		{
 			TileType = tileType;
@@ -21,12 +28,18 @@ namespace aStar
 			Color = SelectTileColor(tileType);
 			Scale = CellSize / (float)this.Height;
 			Index = index;
+			MyNode = pathNode;
 		}
 
 		public TileType ChangeTileType(TileType tileType)
 		{
 			Color = SelectTileColor(tileType);
 			return TileType = tileType;
+		}
+
+		public PathNode SetPathNode(PathNode pathNode)
+		{
+			return MyNode = pathNode;
 		}
 
 		public static Color SelectTileColor(TileType tileType)
