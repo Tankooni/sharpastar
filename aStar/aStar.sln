@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aStar", "aStar\aStar.csproj", "{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hexStar", "hexStar\hexStar.csproj", "{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,16 @@ Global
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{40638E8D-DA76-4ACB-867A-7D65E0A0EC2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{83EE1313-D6D4-4A38-AA8D-7B744D34DF33}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

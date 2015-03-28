@@ -11,7 +11,7 @@ using Priority_Queue;
 using Indigo.Components;
 using Indigo.Inputs;
 
-namespace aStar
+namespace hexStar
 {
 	public class MapRow
 	{
@@ -21,19 +21,25 @@ namespace aStar
 	public class TileMap : Entity
 	{
 		public List<MapRow> Rows = new List<MapRow>();
-		public int MapWidth = 35;
-		public int MapHeight = 35;
+		public int MapWidth = 20;
+		public int MapHeight = 40;
 
 		const int TileSize = 16;
+		const int TileWidth = 33;
+		const int TileHeight = 27;
+		const int TileStepX = 52;
+		const int TileStepY = 14;
+		const int OddRowXOffset = 26;
 
 		public TileMap()
 		{
 			var startIndex = Tuple.Create<int, int>(FP.Rand(MapWidth), FP.Rand(MapHeight));
 			var endIndex = Tuple.Create<int, int>(FP.Rand(MapWidth), FP.Rand(MapHeight));
-			while(startIndex.Item1 == endIndex.Item1 && startIndex.Item1 == endIndex.Item2)
+			while (startIndex.Item1 == endIndex.Item1 && startIndex.Item1 == endIndex.Item2)
 				endIndex = Tuple.Create<int, int>(FP.Rand(MapWidth), FP.Rand(MapHeight));
 			for (int y = 0; y < MapHeight; y++)
 			{
+				int rowOffset = (y % 2 == 1) ? OddRowXOffset : 0;
 				MapRow row = new MapRow();
 				for (int x = 0; x < MapWidth; x++)
 				{
@@ -43,63 +49,57 @@ namespace aStar
 					else if (x == endIndex.Item1 && y == endIndex.Item2)
 						tileType = TileType.End;
 					else
-						tileType = FP.Choose.EnumWeighted<TileType>(0, 0, 0, 1, .65);
+						tileType = FP.Choose.EnumWeighted<TileType>(0, 0, 0, 1, .65f, 0 );
 					MapCell mc = new MapCell(tileType, TileSize, Tuple.Create<int, int>(x, y))
 					{
-						X = x * TileSize,
-						Y = y * TileSize
+						X = x * TileStepX + rowOffset,
+						Y = y * TileStepY
 					};
-					mc.SetPathNode(new PathNode(mc, null, x, y));
+					mc.SetPathNode(new PathNode(mc, null, mc.X, mc.Y));
 					this.AddComponent<Image>(mc);
 					row.Columns.Add(mc);
 				}
 				Rows.Add(row);
 			}
 
+			//CoroutineHost coHost1 = AddComponent<CoroutineHost>(new CoroutineHost());
+			//coHost1.Start(RunBuildNodeConnections());
+
 			foreach (MapRow mr in Rows)
 				foreach (MapCell mc in mr.Columns)
 					PathNode.ConnectedNodes[mc.MyNode] = SelectTilesAroundTile(mc.Index.Item1, mc.Index.Item2);
 
-			CoroutineHost coHost = AddComponent<CoroutineHost>(new CoroutineHost());
-			coHost.Start(Things(startIndex, endIndex));
+			CoroutineHost coHost2 = AddComponent<CoroutineHost>(new CoroutineHost());
+			coHost2.Start(RunBuildPath(startIndex, endIndex));
 		}
 
-		/// <summary>
-		/// Selects all tiles and the movement cost of moving to that tile around a specified tile
-		/// </summary>
-		/// <param name="curPosition"></param>
-		/// <param name="includeDiag">This will determine if diagnals are to be included. Defaults to false</param>
-		/// <returns></returns>
 		public List<Tuple<PathNode, float>> SelectTilesAroundTile(int centerX, int centerY, bool includeDiag = false)
 		{
 			List<Tuple<PathNode, float>> nodes = new List<Tuple<PathNode, float>>();
-			int[] search = new int[]{-1, 0, 1};
-			foreach (int x in search)
+			int evens = (centerY % 2 == 0 ? -1 : 1);
+			List<Tuple<int, int>> toCheck = new List<Tuple<int,int>>
 			{
-				if (centerX + x >= MapWidth)
-					break;
-				if (centerX + x < 0)
+				Tuple.Create<int, int>(0, -2),
+				Tuple.Create<int, int>(0, 2),
+				Tuple.Create<int, int>(0, -1),
+				Tuple.Create<int, int>(evens , -1),
+				Tuple.Create<int, int>(0, 1),
+				Tuple.Create<int, int>(evens, 1)
+			};
+
+			foreach(var checkPosition in toCheck)
+			{
+				int x = checkPosition.Item1 + centerX;
+				if (x < 0 || x >= MapWidth)
 					continue;
-				foreach (int y in search)
-				{
-					if (centerY + y >= MapHeight)
-						break;
-					if (centerY + y < 0 || (x == 0 && y == 0))
-						continue;
-					MapCell mapCell = Rows[centerY + y].Columns[centerX + x];
-					float moveMultiplier = MapCell.TileSpeeds[mapCell.TileType];
-					if (moveMultiplier <= 0)
-						continue;
-					
-					if(Math.Abs(x) == 1 && Math.Abs(y) == 1)
-					{
-						if (!includeDiag)
-							continue;
-						moveMultiplier *= 1.41f;
-					}
-					if(mapCell.MyNode.Enabled)
-						nodes.Add(Tuple.Create<PathNode, float>(mapCell.MyNode, moveMultiplier));
-				}
+				int y = checkPosition.Item2 + centerY;
+				if (y < 0 || y >= MapHeight)
+					continue;
+				MapCell mapCell = Rows[y].Columns[x];
+				float moveMultiplier = MapCell.TileSpeeds[mapCell.TileType];
+				if (moveMultiplier <= 0 || mapCell.MyNode == null || !mapCell.MyNode.Enabled)
+					continue;
+				nodes.Add(Tuple.Create<PathNode, float>(mapCell.MyNode, moveMultiplier));
 			}
 			return nodes;
 		}
@@ -114,14 +114,42 @@ namespace aStar
 			return Math.Abs(p1.Item1 - p2.Item1) + Math.Abs(p1.Item2 - p2.Item2);
 		}
 
-		IEnumerator Things(Tuple<int, int> startIndex, Tuple<int, int> endIndex)
+		IEnumerator RunBuildNodeConnections()
+		{
+			MapCell prevMapCell = null;
+			bool holdUp = false;
+			foreach (MapRow mr in Rows)
+				foreach (MapCell mc in mr.Columns)
+				{
+					while (!Keyboard.D.Pressed || holdUp)
+					{
+						holdUp = false;
+						yield return null;
+					}
+					holdUp = true;
+					if (prevMapCell != null)
+					{
+						prevMapCell.ChangeTileType(TileType.Regular);
+						foreach (var cell in SelectTilesAroundTile(prevMapCell.Index.Item1, prevMapCell.Index.Item2))
+						{
+							cell.Item1.attachedObject.ChangeTileType(TileType.Regular);
+						}
+					}
+					mc.ChangeTileType(TileType.Path);
+					foreach (var node in PathNode.ConnectedNodes[mc.MyNode] = SelectTilesAroundTile(mc.Index.Item1, mc.Index.Item2))
+						node.Item1.attachedObject.ChangeTileType(TileType.Considered);
+					prevMapCell = mc;
+				}
+		}
+
+		IEnumerator RunBuildPath(Tuple<int, int> startIndex, Tuple<int, int> endIndex)
 		{
 			while (!Keyboard.Space.Pressed)
 				yield return null;
 			foreach (var thing in SelectAstarPath(startIndex, endIndex))
 			{
 				thing.attachedObject.ChangeTileType(TileType.Path);
-				yield return CoroutineHost.WaitForSeconds(.1f);
+				yield return CoroutineHost.WaitForSeconds(.15f);
 			}
 		}
 
@@ -146,6 +174,8 @@ namespace aStar
 					PathNode current = frontier.Dequeue();
 					foreach (var next in PathNode.ConnectedNodes[current])
 					{
+						if (next.Item1.attachedObject.TileType != TileType.Start && next.Item1.attachedObject.TileType != TileType.End)
+							next.Item1.attachedObject.ChangeTileType(TileType.Considered);
 						float newCost = costSoFar[current] + next.Item2;
 						if (!costSoFar.ContainsKey(next.Item1))
 							costSoFar.Add(next.Item1, newCost);
@@ -155,7 +185,7 @@ namespace aStar
 							continue;
 						float priority = newCost + CalculateHeuristic(endNode.X, endNode.Y, startNode.X, startNode.Y);
 						frontier.Enqueue(next.Item1, priority);
-						
+
 						if (cameFrom.ContainsKey(next.Item1))
 							cameFrom[next.Item1] = current;
 						else
