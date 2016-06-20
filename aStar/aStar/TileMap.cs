@@ -21,10 +21,10 @@ namespace aStar
 	public class TileMap : Entity
 	{
 		public List<MapRow> Rows = new List<MapRow>();
-		public int MapWidth = 35;
-		public int MapHeight = 35;
+		public int MapWidth = 60;
+		public int MapHeight = 60;
 
-		const int TileSize = 16;
+		const int TileSize = 5;
 
 		public TileMap()
 		{
@@ -73,14 +73,14 @@ namespace aStar
 		public List<Tuple<PathNode, float>> SelectTilesAroundTile(int centerX, int centerY, bool includeDiag = false)
 		{
 			List<Tuple<PathNode, float>> nodes = new List<Tuple<PathNode, float>>();
-			int[] search = new int[]{-1, 0, 1};
-			foreach (int x in search)
+
+			for (int x = -1; x < 2; ++x)
 			{
 				if (centerX + x >= MapWidth)
 					break;
 				if (centerX + x < 0)
 					continue;
-				foreach (int y in search)
+				for(int y = -1; y < 2; ++y)
 				{
 					if (centerY + y >= MapHeight)
 						break;
@@ -168,9 +168,7 @@ namespace aStar
 			while (startNode.X != currentNode.X || startNode.Y != currentNode.Y)
 			{
 				if (cameFrom.ContainsKey(currentNode))
-				{
 					yield return currentNode = cameFrom[currentNode];
-				}
 				else
 					break;
 			}
