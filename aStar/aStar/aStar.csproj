@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map.cs" />
     <Compile Include="MapCell.cs" />
     <Compile Include="PathNode.cs" />
     <Compile Include="Program.cs" />

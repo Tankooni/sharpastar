@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Indigo;
 using Indigo.Graphics;
+using Priority_Queue;
 
 namespace aStar
 {
@@ -23,7 +26,7 @@ namespace aStar
 			TileType = tileType;
 			CellSize = cellSize;
 			Color = SelectTileColor(tileType);
-			Scale = CellSize / (float)Height;
+			Scale = CellSize / (float)this.Height;
 			Index = index;
 			MyNode = pathNode;
 		}
